@@ -5,148 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoLink - Roblox Verification</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .card {
-      background-color: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #00a2ff, #0066ff);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 24px;
-      color: #ffffff;
-    }
-
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #ffffff;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #334155;
-      border-top-color: #00a2ff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px auto;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .status-box {
-      background-color: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      padding: 16px;
-      font-size: 14px;
-      word-break: break-word;
-      margin-top: 15px;
-    }
-
-    .status-success {
-      border-color: #16a34a;
-      color: #4ade80;
-    }
-
-    .status-error {
-      border-color: #dc2626;
-      color: #f87171;
-    }
-
-    .code-box {
-      background: #090d16;
-      border: 1px dashed #334155;
-      padding: 12px;
-      border-radius: 8px;
-      font-family: monospace;
-      color: #00a2ff;
-      margin-top: 10px;
-      user-select: all;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 40px; max-width: 440px; width: 100%; text-align: center; }
+    h1 { font-size: 22px; margin-bottom: 8px; }
+    .status-box { background-color: #0f172a; border: 1px solid #16a34a; border-radius: 10px; padding: 16px; color: #4ade80; margin-top: 15px; font-size: 14px; }
+    .code-box { background: #090d16; border: 1px dashed #00a2ff; padding: 12px; border-radius: 8px; font-family: monospace; color: #00a2ff; margin-top: 15px; font-size: 16px; user-select: all; cursor: pointer; }
+    p { color: #94a3b8; font-size: 14px; margin-top: 15px; }
   </style>
 </head>
 <body>
-
   <div class="card">
-    <div class="brand">
-      <div class="brand-icon">R</div>
-      <h1>RoLink Verification</h1>
+    <h1>RoLink Verification</h1>
+    <div id="status-box" class="status-box">
+      <span id="status">Processing OAuth parameter...</span>
     </div>
-
-    <div id="loader" class="spinner"></div>
-    <div id="status-container" class="status-box">
-      <span id="status">Verifying Roblox OAuth authorization...</span>
-    </div>
-    <div id="code-container" style="display: none;">
-      <p style="font-size: 13px; color: #94a3b8; margin-top: 15px;">If auto-linking fails, run <code>/verify</code> again in Discord.</p>
+    <div id="action-area" style="display: none;">
+      <p>Copy the command below and paste it into Discord:</p>
+      <div id="cmd-box" class="code-box"></div>
     </div>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
 
-    const loader = document.getElementById('loader');
-    const statusText = document.getElementById('status');
-    const statusBox = document.getElementById('status-container');
-
-    if (!code || !state) {
-      loader.style.display = 'none';
-      statusBox.classList.add('status-error');
-      statusText.innerText = 'Missing OAuth code or Discord State. Please initiate verification from Discord using /verify.';
+    if (code) {
+      document.getElementById('status').innerText = '✅ Authorization Code Received!';
+      document.getElementById('action-area').style.display = 'block';
+      document.getElementById('cmd-box').innerText = `/complete code:${code}`;
     } else {
-      loader.style.display = 'none';
-      statusBox.classList.add('status-success');
-      statusText.innerText = '✅ Roblox Authorization Code received!';
-      
-      const codeContainer = document.getElementById('code-container');
-      codeContainer.style.display = 'block';
-      codeContainer.innerHTML += `<div class="code-box">Verification Token Generated.<br>Return to Discord and run /update</div>`;
+      document.getElementById('status-box').style.borderColor = '#dc2626';
+      document.getElementById('status').style.color = '#f87171';
+      document.getElementById('status').innerText = '❌ Missing code. Please start verification from Discord using /verify.';
     }
   </script>
 </body>
