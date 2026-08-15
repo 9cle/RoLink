@@ -1,22 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoLink Verification</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoLink - Roblox Verification</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-    .card { background: #1e293b; padding: 2.5rem; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    h2 { margin-top: 0; color: #f8fafc; }
-    p { color: #94a3b8; line-height: 1.5; }
-    .status { font-weight: bold; margin-top: 1.5rem; padding: 0.75rem; border-radius: 8px; background: #0f172a; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #00a2ff, #0066ff);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      color: #ffffff;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #334155;
+      border-top-color: #00a2ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .status-box {
+      background-color: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .status-success {
+      border-color: #16a34a;
+      color: #4ade80;
+    }
+
+    .status-error {
+      border-color: #dc2626;
+      color: #f87171;
+    }
   </style>
 </head>
 <body>
+
   <div class="card">
-    <h2>RoLink Account Link</h2>
-    <p id="message">Processing your Roblox verification request...</p>
-    <div id="status" class="status" style="color: #38bdf8;">Connecting to server...</div>
+    <div class="brand">
+      <div class="brand-icon">R</div>
+      <h1>RoLink Verification</h1>
+    </div>
+
+    <div id="loader" class="spinner"></div>
+    <div id="status-container" class="status-box">
+      <span id="status">Connecting to verification server...</span>
+    </div>
   </div>
 
   <script>
@@ -24,39 +123,68 @@
     const code = urlParams.get('code');
     const state = urlParams.get('state');
 
-    // Paste the HTTPS tunnel URL printed in your WispByte console here:
-    const BOT_CALLBACK_URL = "https://rolink-9cle-bot-v1-9872.loca.lt/oauth/callback";
+    const loader = document.getElementById('loader');
+    const statusText = document.getElementById('status');
+    const statusBox = document.getElementById('status-container');
 
     if (!code || !state) {
-      document.getElementById('message').innerText = "Invalid verification link.";
-      document.getElementById('status').innerText = "❌ Missing parameters.";
-      document.getElementById('status').style.color = "#ef4444";
+      loader.style.display = 'none';
+      statusBox.classList.add('status-error');
+      statusText.innerText = 'Error: Missing OAuth parameters. Please initiate verification from Discord using /verify.';
     } else {
-      fetch(BOT_CALLBACK_URL, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'bypass-tunnel-reminder': 'true'
-        },
-        body: JSON.stringify({ code: code, discordId: state })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('message').innerText = `Successfully verified as ${data.username}!`;
-          document.getElementById('status').innerText = "✅ You may close this tab and return to Discord.";
-          document.getElementById('status').style.color = "#22c55e";
-        } else {
-          document.getElementById('message').innerText = "Verification failed.";
-          document.getElementById('status').innerText = "❌ " + (data.error || "Unable to complete request.");
-          document.getElementById('status').style.color = "#ef4444";
+      statusText.innerText = 'Exchanging authentication token with RoLink bot...';
+
+      // Connect using your Discord Client ID for room matching
+      const tunnelRoom = "rolink-1538132611225092126";
+      const ws = new WebSocket(`wss://socketsbay.com/wss/v2/1/${tunnelRoom}/`);
+      const reqId = Math.random().toString(36).substring(2, 10);
+
+      // Connection timeout fallback
+      const timeout = setTimeout(() => {
+        if (ws.readyState !== WebSocket.CLOSED) {
+          ws.close();
+          loader.style.display = 'none';
+          statusBox.classList.add('status-error');
+          statusText.innerText = 'Connection timed out. Ensure your Discord bot is online and running on WispByte.';
         }
-      })
-      .catch(() => {
-        document.getElementById('message').innerText = "Could not connect to the bot server.";
-        document.getElementById('status').innerText = "❌ Server Offline.";
-        document.getElementById('status').style.color = "#ef4444";
-      });
+      }, 15000);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          type: 'OAUTH_REQUEST',
+          reqId: reqId,
+          code: code,
+          discordId: state
+        }));
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'OAUTH_RESPONSE' && data.reqId === reqId) {
+            clearTimeout(timeout);
+            loader.style.display = 'none';
+
+            if (data.success) {
+              statusBox.classList.add('status-success');
+              statusText.innerText = `✅ Successfully verified as ${data.username}! You may now close this tab and return to Discord.`;
+            } else {
+              statusBox.classList.add('status-error');
+              statusText.innerText = `❌ Verification failed: ${data.error || 'Unknown error'}`;
+            }
+            ws.close();
+          }
+        } catch (e) {
+          // Ignore unrelated websocket network frames
+        }
+      };
+
+      ws.onerror = () => {
+        clearTimeout(timeout);
+        loader.style.display = 'none';
+        statusBox.classList.add('status-error');
+        statusText.innerText = 'Failed to establish WebSocket link with verification service.';
+      };
     }
   </script>
 </body>
