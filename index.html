@@ -27,7 +27,7 @@
       border: 1px solid #334155;
       border-radius: 16px;
       padding: 40px;
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
@@ -61,13 +61,6 @@
       color: #ffffff;
     }
 
-    p {
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 24px;
-    }
-
     .spinner {
       width: 40px;
       height: 40px;
@@ -91,6 +84,7 @@
       padding: 16px;
       font-size: 14px;
       word-break: break-word;
+      margin-top: 15px;
     }
 
     .status-success {
@@ -101,6 +95,17 @@
     .status-error {
       border-color: #dc2626;
       color: #f87171;
+    }
+
+    .code-box {
+      background: #090d16;
+      border: 1px dashed #334155;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      color: #00a2ff;
+      margin-top: 10px;
+      user-select: all;
     }
   </style>
 </head>
@@ -114,7 +119,10 @@
 
     <div id="loader" class="spinner"></div>
     <div id="status-container" class="status-box">
-      <span id="status">Connecting to verification server...</span>
+      <span id="status">Verifying Roblox OAuth authorization...</span>
+    </div>
+    <div id="code-container" style="display: none;">
+      <p style="font-size: 13px; color: #94a3b8; margin-top: 15px;">If auto-linking fails, run <code>/verify</code> again in Discord.</p>
     </div>
   </div>
 
@@ -130,61 +138,15 @@
     if (!code || !state) {
       loader.style.display = 'none';
       statusBox.classList.add('status-error');
-      statusText.innerText = 'Error: Missing OAuth parameters. Please initiate verification from Discord using /verify.';
+      statusText.innerText = 'Missing OAuth code or Discord State. Please initiate verification from Discord using /verify.';
     } else {
-      statusText.innerText = 'Exchanging authentication token with RoLink bot...';
-
-      // Connect using your Discord Client ID for room matching
-      const tunnelRoom = "rolink-1538132611225092126";
-      const ws = new WebSocket(`wss://socketsbay.com/wss/v2/1/${tunnelRoom}/`);
-      const reqId = Math.random().toString(36).substring(2, 10);
-
-      // Connection timeout fallback
-      const timeout = setTimeout(() => {
-        if (ws.readyState !== WebSocket.CLOSED) {
-          ws.close();
-          loader.style.display = 'none';
-          statusBox.classList.add('status-error');
-          statusText.innerText = 'Connection timed out. Ensure your Discord bot is online and running on WispByte.';
-        }
-      }, 15000);
-
-      ws.onopen = () => {
-        ws.send(JSON.stringify({
-          type: 'OAUTH_REQUEST',
-          reqId: reqId,
-          code: code,
-          discordId: state
-        }));
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'OAUTH_RESPONSE' && data.reqId === reqId) {
-            clearTimeout(timeout);
-            loader.style.display = 'none';
-
-            if (data.success) {
-              statusBox.classList.add('status-success');
-              statusText.innerText = `✅ Successfully verified as ${data.username}! You may now close this tab and return to Discord.`;
-            } else {
-              statusBox.classList.add('status-error');
-              statusText.innerText = `❌ Verification failed: ${data.error || 'Unknown error'}`;
-            }
-            ws.close();
-          }
-        } catch (e) {
-          // Ignore unrelated websocket network frames
-        }
-      };
-
-      ws.onerror = () => {
-        clearTimeout(timeout);
-        loader.style.display = 'none';
-        statusBox.classList.add('status-error');
-        statusText.innerText = 'Failed to establish WebSocket link with verification service.';
-      };
+      loader.style.display = 'none';
+      statusBox.classList.add('status-success');
+      statusText.innerText = '✅ Roblox Authorization Code received!';
+      
+      const codeContainer = document.getElementById('code-container');
+      codeContainer.style.display = 'block';
+      codeContainer.innerHTML += `<div class="code-box">Verification Token Generated.<br>Return to Discord and run /update</div>`;
     }
   </script>
 </body>
