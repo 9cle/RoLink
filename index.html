@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoLink Verification</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    .card { background: #1e293b; padding: 2.5rem; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    h2 { margin-top: 0; color: #f8fafc; }
+    p { color: #94a3b8; line-height: 1.5; }
+    .status { font-weight: bold; margin-top: 1.5rem; padding: 0.75rem; border-radius: 8px; background: #0f172a; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>RoLink Account Link</h2>
+    <p id="message">Processing your Roblox verification request...</p>
+    <div id="status" class="status" style="color: #38bdf8;">Connecting to server...</div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+
+    // Replace this with your hosted Discord bot URL (e.g., https://your-app.onrender.app/oauth/callback)
+    const BOT_CALLBACK_URL = "http://78.154.103.41:14351/oauth/callback";
+
+    if (!code || !state) {
+      document.getElementById('message').innerText = "Invalid verification link.";
+      document.getElementById('status').innerText = "❌ Missing parameters.";
+      document.getElementById('status').style.color = "#ef4444";
+    } else {
+      fetch(BOT_CALLBACK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, discordId: state })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('message').innerText = `Successfully verified as ${data.username}!`;
+          document.getElementById('status').innerText = "✅ You may close this tab and return to Discord.";
+          document.getElementById('status').style.color = "#22c55e";
+        } else {
+          document.getElementById('message').innerText = "Verification failed.";
+          document.getElementById('status').innerText = "❌ " + (data.error || "Unable to complete request.");
+          document.getElementById('status').style.color = "#ef4444";
+        }
+      })
+      .catch(() => {
+        document.getElementById('message').innerText = "Could not connect to the bot server.";
+        document.getElementById('status').innerText = "❌ Server Offline.";
+        document.getElementById('status').style.color = "#ef4444";
+      });
+    }
+  </script>
+</body>
+</html>
