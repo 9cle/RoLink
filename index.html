@@ -4,14 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoLink - Roblox Verification</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
     .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 40px; max-width: 440px; width: 100%; text-align: center; }
     h1 { font-size: 22px; margin-bottom: 8px; }
     .status-box { background-color: #0f172a; border: 1px solid #16a34a; border-radius: 10px; padding: 16px; color: #4ade80; margin-top: 15px; font-size: 14px; }
     .code-box { background: #090d16; border: 1px dashed #00a2ff; padding: 12px; border-radius: 8px; font-family: monospace; color: #00a2ff; margin-top: 15px; font-size: 16px; user-select: all; cursor: pointer; }
     p { color: #94a3b8; font-size: 14px; margin-top: 15px; }
+    footer { margin-top: 24px; text-align: center; }
+    footer a { color: #64748b; font-size: 13px; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #38bdf8; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -25,6 +29,10 @@
       <div id="cmd-box" class="code-box"></div>
     </div>
   </div>
+
+  <footer>
+    <a href="safety.html">How we handle safety</a>
+  </footer>
 
   <script>
     const params = new URLSearchParams(window.location.search);
