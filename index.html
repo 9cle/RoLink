@@ -7,19 +7,123 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; padding: 20px; }
-    header { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 1200px; margin: 0 auto; padding: 10px 0; }
+    
+    body {
+      background-color: #0b1120;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+      /* Subtle radial background glow to fill empty space */
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(0, 162, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(88, 101, 242, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    header { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      width: 100%; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 10px 0; 
+    }
     header img { width: 28px; height: 28px; border-radius: 6px; }
     header span { font-size: 18px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em; }
-    main { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; }
-    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 40px; max-width: 440px; width: 100%; text-align: center; }
+
+    main { 
+      flex: 1; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      width: 100%; 
+      /* Positioned higher on the viewport to reduce empty space */
+      padding-bottom: 80px; 
+    }
+
+    .card { 
+      background-color: #1e293b; 
+      border: 1px solid #334155; 
+      border-radius: 16px; 
+      padding: 40px; 
+      max-width: 440px; 
+      width: 100%; 
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 162, 255, 0.2);
+    }
+
     h1 { font-size: 22px; margin-bottom: 8px; }
-    .status-box { background-color: #0f172a; border: 1px solid #16a34a; border-radius: 10px; padding: 16px; color: #4ade80; margin-top: 15px; font-size: 14px; }
-    .code-box { background: #090d16; border: 1px dashed #00a2ff; padding: 12px; border-radius: 8px; font-family: monospace; color: #00a2ff; margin-top: 15px; font-size: 16px; user-select: all; cursor: pointer; }
+
+    .status-box { 
+      background-color: #0f172a; 
+      border: 1px solid #16a34a; 
+      border-radius: 10px; 
+      padding: 16px; 
+      color: #4ade80; 
+      margin-top: 15px; 
+      font-size: 14px; 
+    }
+
+    .code-box { 
+      background: #090d16; 
+      border: 1px dashed #00a2ff; 
+      padding: 12px; 
+      border-radius: 8px; 
+      font-family: monospace; 
+      color: #00a2ff; 
+      margin-top: 15px; 
+      font-size: 16px; 
+      user-select: all; 
+      cursor: pointer; 
+    }
+
     p { color: #94a3b8; font-size: 14px; margin-top: 15px; }
-    .add-bot-btn { display: inline-block; width: 100%; margin-top: 20px; padding: 12px 16px; background-color: #5865f2; color: #ffffff; font-weight: 600; font-size: 14px; border-radius: 8px; text-decoration: none; transition: background-color 0.2s; }
-    .add-bot-btn:hover { background-color: #4752c4; }
-    footer { margin-top: 24px; text-align: center; padding-bottom: 10px; }
+
+    .action-button { 
+      display: inline-block; 
+      width: 100%; 
+      margin-top: 20px; 
+      padding: 12px 16px; 
+      background-color: #334155; 
+      color: #f8fafc; 
+      font-weight: 600; 
+      font-size: 14px; 
+      border-radius: 8px; 
+      text-decoration: none; 
+      transition: background-color 0.2s, border-color 0.2s; 
+      border: 1px solid #475569;
+    }
+    .action-button:hover { 
+      background-color: #475569; 
+      border-color: #64748b;
+    }
+
+    .add-bot-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: #64748b;
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .add-bot-link:hover {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+
+    footer { margin-top: auto; text-align: center; padding: 20px 0; }
     footer a { color: #64748b; font-size: 13px; text-decoration: none; transition: color 0.2s; }
     footer a:hover { color: #38bdf8; text-decoration: underline; }
     .copyright { color: #475569; font-size: 12px; margin-top: 8px; }
@@ -33,15 +137,23 @@
 
   <main>
     <div class="card">
+      <img src="favicon.ico" alt="RoLink Icon" class="card-icon" />
       <h1>RoLink Verification</h1>
+      
       <div id="status-box" class="status-box">
         <span id="status">Processing OAuth parameter...</span>
       </div>
+
       <div id="action-area" style="display: none;">
         <p>Copy the command below and paste it into Discord:</p>
         <div id="cmd-box" class="code-box"></div>
       </div>
-      <a href="https://discord.com/oauth2/authorize?client_id=1538132611225092126&permissions=8&integration_type=0&scope=bot" target="_blank" class="add-bot-btn">Add Bot to Discord Server</a>
+
+      <a id="secondary-action" href="https://discord.com/app" target="_blank" class="action-button">Return to Discord</a>
+      
+      <div>
+        <a href="https://discord.com/oauth2/authorize?client_id=1538132611225092126&permissions=8&integration_type=0&scope=bot" target="_blank" class="add-bot-link">Want to add RoLink to your server?</a>
+      </div>
     </div>
   </main>
 
@@ -58,10 +170,14 @@
       document.getElementById('status').innerText = '✅ Authorization Code Received!';
       document.getElementById('action-area').style.display = 'block';
       document.getElementById('cmd-box').innerText = `/complete code:${code}`;
+      document.getElementById('secondary-action').innerText = 'Return to Discord';
+      document.getElementById('secondary-action').href = 'https://discord.com/app';
     } else {
       document.getElementById('status-box').style.borderColor = '#dc2626';
       document.getElementById('status').style.color = '#f87171';
-      document.getElementById('status').innerText = '❌ Missing code. Please start verification from Discord using /verify.';
+      document.getElementById('status').innerText = '❌ No verification code found. Start verification in Discord using /verify.';
+      document.getElementById('secondary-action').innerText = 'How to Verify';
+      document.getElementById('secondary-action').href = 'safety.html';
     }
   </script>
 </body>
