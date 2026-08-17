@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How We Handle Safety - RoLink</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 40px; max-width: 600px; width: 100%; text-align: left; }
+    h1 { font-size: 24px; margin-bottom: 12px; color: #f8fafc; text-align: center; }
+    p.subtitle { color: #94a3b8; font-size: 14px; text-align: center; margin-bottom: 28px; }
+    .section { background-color: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+    .section h2 { font-size: 16px; color: #38bdf8; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .section p { color: #cbd5e1; font-size: 14px; line-height: 1.6; }
+    .back-btn { display: inline-block; margin-top: 12px; color: #94a3b8; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .back-btn:hover { color: #f8fafc; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>How We Handle Safety</h1>
+    <p class="subtitle">Your account security and privacy are our highest priorities.</p>
+
+    <div class="section">
+      <h2>🔒 Secure OAuth 2.0 Authentication</h2>
+      <p>RoLink uses Roblox's official OAuth 2.0 system. We never ask for your Roblox password, cookie (`.ROBLOSECURITY`), or sensitive account credentials. You log in directly on Roblox.com.</p>
+    </div>
+
+    <div class="section">
+      <h2>🛡️ Read-Only Account Access</h2>
+      <p>The permissions requested during authentication are strictly limited to basic user details (User ID, Username, and Group Ranks). RoLink cannot modify your Roblox account, spend Robux, or access private messages.</p>
+    </div>
+
+    <div class="section">
+      <h2>💾 Minimal Data Retention</h2>
+      <p>We only store your Discord User ID linked to your Roblox User ID and Username for server role sync. We do not sell, share, or track user data outside of functional bot verification features.</p>
+    </div>
+
+    <div class="section">
+      <h2>⚡ One-Time Authorization Codes</h2>
+      <p>Authorization codes generated during login expire quickly and can only be redeemed once via Discord slash commands, preventing interception or unauthorized re-use.</p>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="index.html" class="back-btn">← Back to Verification</a>
+    </div>
+  </div>
+</body>
+</html>
